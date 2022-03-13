@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Robot Turtle</title>
+  </head>
+<body style="overflow: hidden; margin: 0; padding: 0;">
+<canvas id="canvas" width="500" height="500" style="
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  "></canvas>
+
+<p id="XY">
+  X = 0
+  Y = 0
+</p>
+
+<script type="text/javascript">
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext('2d');
+
+var scale = 1;
+var logoX = 0;
+var logoY = 0;
+var logo = new Image();
+  logo.src = "7316SVG.svg";
+  logo.onload = function() { render() };
+
+function render(){
+  //draw background
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  //draw image
+  var centerX = (canvas.width - canvas.width * scale) / 2;
+  var centerY = (canvas.height - canvas.height * scale) / 2;
+  ctx.drawImage(logo, centerX, centerY, canvas.width * scale, canvas.height * scale);
+
+  //draw axis
+  ctx.fillStyle = "red";
+  ctx.fillRect(canvas.width/2 - 1, 0, 3, canvas.height);
+  ctx.fillRect(0, canvas.height/2 - 1,  canvas.width, 3);
+
+  //draw vector graphics
+
+}
+
+canvas.addEventListener('mousedown', function(e) {
+  var rect = canvas.getBoundingClientRect();
+  //gets points based on middle of canvas being (0,0)
+  var mX = e.x - rect.left - canvas.width/2;
+  var mY = e.y - rect.top - canvas.height/2;
+  //console.log(mX + ", " + mY);
+  var scaledX = mX * (70.25/(canvas.width/2));
+  var scaledY = -1 * mY * (70.25/( canvas.height/2));
+  document.getElementById("XY").innerText = "X = " + scaledX + " Y = " + scaledY;
+
+  render();
+});
+
+canvas.addEventListener('mousemove', function(e) {
+
+});
+
+canvas.addEventListener('mouseup', function(e) {
+
+});
+
+canvas.addEventListener("mousewheel", function(e) {
+  scale += -e.deltaY / 1000;
+  // console.log(scale)
+  logo.style = "transform: scale(0%)";
+  //logo.style.backgroundColor = scale;
+  //logo.setAttribute("transform", "scale(" + scale + ")");
+
+  render();
+});
+
+canvas.addEventListener('contextmenu', function(e) {
+   event.preventDefault();  //stop right click menu showin up
+   //var mX = e.x - rect.left - canvas.width/2;
+   //var mY = e.y - rect.top - canvas.height/2;
+});
+
+</script>
+</body>
+</html>
