@@ -56,7 +56,7 @@ function getPoints() {
   imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   rgbaData = imgData.data;
 
-  for (var y = 0; y < canvas.height; y++) {  //loop through each scanline of canvas
+  for (var y = canvas.height; y > 0; y--) {  //loop through each scanline of canvas
     //loop through scanline pixels
     var scanline = y * canvas.width * 4;  //RGBA
 
