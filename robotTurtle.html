@@ -18,6 +18,8 @@
   Y = 0
 </p>
 
+<button onclick="getPoints()">Get List 'o Points</button>
+
 <script type="text/javascript">
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');
@@ -25,27 +27,46 @@ const ctx = canvas.getContext('2d');
 var scale = 1;
 var logoX = 0;
 var logoY = 0;
-var logo = new Image();
+var logo = new Image;
   logo.src = "7316SVG.svg";
   logo.onload = function() { render() };
+
+var pointsList = [];
 
 function render(){
   //draw background
   ctx.fillStyle = "white";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  //draw image
-  var centerX = (canvas.width - canvas.width * scale) / 2;
-  var centerY = (canvas.height - canvas.height * scale) / 2;
-  ctx.drawImage(logo, centerX, centerY, canvas.width * scale, canvas.height * scale);
-
   //draw axis
   ctx.fillStyle = "red";
   ctx.fillRect(canvas.width/2 - 1, 0, 3, canvas.height);
   ctx.fillRect(0, canvas.height/2 - 1,  canvas.width, 3);
 
-  //draw vector graphics
+  //draw image
+  var centerX = (canvas.width - canvas.width * scale) / 2;
+  var centerY = (canvas.height - canvas.height * scale) / 2;
+  ctx.drawImage(logo, centerX, centerY, canvas.width * scale, canvas.height * scale);
+}
 
+//calculates all the points the turtle will have to drive through in order
+//traces the outside of the shape based on if there is still black in a three by three box
+//around tracer
+function getPoints() {
+  imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  rgbaData = imgData.data;
+
+  for (var y = 0; y < canvas.height; y++) {  //loop through each scanline of canvas
+    //loop through scanline pixels
+    var scanline = y * canvas.width * 4;  //RGBA
+
+    for (var x = 0; x < canvas.width; x++) {
+      //if pixel black save that index
+      if (rgbaData[scanline + x * 4] == 0 && rgbaData[scanline + x * 4 + 1] == 0 && rgbaData[scanline + x * 4 + 2] == 0) {
+        document.write("(" + x + ", " + y + ")<br>" );
+      }
+    }
+  }
 }
 
 canvas.addEventListener('mousedown', function(e) {
@@ -57,8 +78,6 @@ canvas.addEventListener('mousedown', function(e) {
   var scaledX = mX * (70.25/(canvas.width/2));
   var scaledY = -1 * mY * (70.25/( canvas.height/2));
   document.getElementById("XY").innerText = "X = " + scaledX + " Y = " + scaledY;
-
-  render();
 });
 
 canvas.addEventListener('mousemove', function(e) {
