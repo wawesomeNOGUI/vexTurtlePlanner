@@ -63,7 +63,9 @@ function getPoints() {
     for (var x = 0; x < canvas.width; x++) {
       //if pixel black save that index
       if (rgbaData[scanline + x * 4] == 0 && rgbaData[scanline + x * 4 + 1] == 0 && rgbaData[scanline + x * 4 + 2] == 0) {
-        document.write("(" + x + ", " + y + ")<br>" );
+        var scaledX = (x - canvas.width/2) * 70.25/(canvas.width/2);
+        var scaledY = -(y - canvas.height/2) * 70.25/(canvas.height/2);
+        document.write("(" + scaledX + ", " + scaledY + ")<br>" );
       }
     }
   }
