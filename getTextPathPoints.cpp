@@ -8,7 +8,7 @@
 void stringToPath(const WCHAR* s)
 {
 	Gdiplus::GraphicsPath path;
-	Gdiplus::FontFamily fontFamily(L"Times New Roman");
+	Gdiplus::FontFamily fontFamily(L"Courier New");
 
 	path.AddString(
 		s,
@@ -48,8 +48,16 @@ int main()
 
 	Gdiplus::GdiplusStartup(&token, &input, NULL);
 
+	std::cout << "Input String: \n";
+
+	std::wstring s;
+	std::wcin >> s;
+
+	//convert to WCHAR*
+	const WCHAR* result = s.c_str();
+
 	//get string path
-	stringToPath(L"Hello World!");
+	stringToPath(result);
 
 	//Shutdown GDI+ when finished using
 	Gdiplus::GdiplusShutdown(token);
