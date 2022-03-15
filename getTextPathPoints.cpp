@@ -21,7 +21,19 @@ void stringToPath(const WCHAR* s)
 
 	//applies a transformation to this path and converts each curve in the path to a sequence of connected lines.
 	path.Flatten();
-	//std::cout << path.GetLastStatus() << std::endl;
+	
+	Gdiplus::PathData pathData;
+	path.GetPathData(&pathData);
+
+	// print the path's data points to terminal
+	for (INT j = 0; j < pathData.Count; ++j) {
+		std::cout << "(" << pathData.Points[j].X << ", " << -pathData.Points[j].Y << ")\n";
+
+		//end of figure marker
+		if ((int)pathData.Types[j] == 129) {
+			std::cout << "STOP\n";
+		}
+	}
 }
 
 int main()
@@ -36,7 +48,7 @@ int main()
 	Gdiplus::GdiplusStartup(&token, &input, NULL);
 
 	//get string path
-	stringToPath(L"Hello World!");
+	stringToPath(L"H");
 
 	//Shutdown GDI+ when finished using
 	Gdiplus::GdiplusShutdown(token);
