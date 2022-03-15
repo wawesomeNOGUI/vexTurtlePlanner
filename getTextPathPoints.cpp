@@ -5,18 +5,22 @@
 //use gdiplus library when compiling
 #pragma comment( lib, "gdiplus" )
 
-using namespace Gdiplus;
-
-VOID GetPointCountExample()
+void stringToPath(const WCHAR* s)
 {
-	// Create a path that has one ellipse and one line.
-	GraphicsPath path;
-	path.AddLine(0, 0, 0, 1);
+	Gdiplus::GraphicsPath path;
+	Gdiplus::FontFamily fontFamily(L"Times New Roman");
 
-	// Find out how many data points are stored in the path.
-	int count = path.GetPointCount();
-	std::cout << count << std::endl;
+	path.AddString(
+		s,
+		-1,                 // NULL-terminated string
+		&fontFamily,
+		Gdiplus::FontStyleRegular,
+		48,
+		Gdiplus::Point(50, 50),
+		NULL);
 
+	//applies a transformation to this path and converts each curve in the path to a sequence of connected lines.
+	path.Flatten();
 	//std::cout << path.GetLastStatus() << std::endl;
 }
 
@@ -25,14 +29,15 @@ int main()
 	//Must call GdiplusStartup before making any GDI+ calls
 	//https://docs.microsoft.com/en-us/windows/win32/api/Gdiplusinit/nf-gdiplusinit-gdiplusstartup
 	ULONG_PTR token;
-	GdiplusStartupInput input;
+	Gdiplus::GdiplusStartupInput input;
 	input.GdiplusVersion = 1;
 	input.SuppressBackgroundThread = false;
 
-	GdiplusStartup(&token, &input, NULL);
+	Gdiplus::GdiplusStartup(&token, &input, NULL);
 
-	GetPointCountExample();
+	//get string path
+	stringToPath(L"Hello World!");
 
 	//Shutdown GDI+ when finished using
-	GdiplusShutdown(token);
+	Gdiplus::GdiplusShutdown(token);
 }
