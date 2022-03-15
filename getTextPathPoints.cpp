@@ -1,9 +1,12 @@
 #include <windows.h>
 #include <gdiplus.h>
 #include <iostream>
+#include <fstream>
 
 //use gdiplus library when compiling
 #pragma comment( lib, "gdiplus" )
+
+std::ofstream outputFile;
 
 void stringToPath(const WCHAR* s)
 {
@@ -30,10 +33,13 @@ void stringToPath(const WCHAR* s)
 	for (INT j = 0; j < pathData.Count; ++j) {
 		//start of new figure marker
 		if ((int)pathData.Types[j] == 0) {
-			std::cout << "START\n";
+			//std::cout << "START\n";
+			outputFile << "START\n";
+
 		}
 
-		std::cout << "(" << pathData.Points[j].X << ", " << -pathData.Points[j].Y << ")\n";
+		//std::cout << "(" << pathData.Points[j].X << ", " << -pathData.Points[j].Y << ")\n";
+		outputFile << "(" << pathData.Points[j].X << ", " << -pathData.Points[j].Y << ")\n";
 	}
 }
 
@@ -48,6 +54,9 @@ int main()
 
 	Gdiplus::GdiplusStartup(&token, &input, NULL);
 
+	//create fille for writing output to
+	outputFile.open("path.txt");
+
 	std::cout << "Input String: \n";
 
 	std::wstring s;
@@ -61,4 +70,6 @@ int main()
 
 	//Shutdown GDI+ when finished using
 	Gdiplus::GdiplusShutdown(token);
+
+	outputFile.close();
 }
