@@ -68,6 +68,8 @@ int main()
 	//get string path
 	stringToPath(result);
 
+	std::cout << "Path saved in path.txt. \n";
+
 	//Shutdown GDI+ when finished using
 	Gdiplus::GdiplusShutdown(token);
 
