@@ -78,16 +78,16 @@ function rotatePath() {
         i++;
       }
 
-      var x = Number(path[i]);
-      var y = Number(path[i + 1]);
-      path[i] = -y;
-      path[i + 1] = x;
+      var x = Number(path[i]) - canvas.width/2;
+      var y = Number(path[i + 1]) - canvas.height/2;
+      path[i] = -y - canvas.width/2;
+      path[i + 1] = x + canvas.height/2;
 
       var centerX = (canvas.width - canvas.width * scale) / 2;
       var centerY = (canvas.height - canvas.height * scale) / 2;
 
-      pathScaled[i] = path[i] * scale - centerX;
-      pathScaled[i + 1] = path[i + 1] * scale - centerY;
+      pathScaled[i] = path[i] * scale;
+      pathScaled[i + 1] = path[i + 1] * scale;
     }
     render();
     render();
