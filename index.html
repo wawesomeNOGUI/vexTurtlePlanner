@@ -132,8 +132,8 @@ function getFieldPoints() {
         i++;
       }
 
-      pathOut.push( Number(pathScaled[i]) * (70.25/(canvas.width/2)) );
-      pathOut.push( Number(-1 * pathScaled[i + 1]) * (70.25/(canvas.height/2)) );
+      pathOut.push( (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2)) );
+      pathOut.push( -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2)) );
     }
   }
 
