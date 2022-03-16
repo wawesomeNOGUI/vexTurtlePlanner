@@ -34,7 +34,7 @@ void stringToPath(const WCHAR* s)
 		//start of new figure marker
 		if ((int)pathData.Types[j] == 0) {
 			//std::cout << "START\n";
-			outputFile << "START\n";
+			outputFile << "START,\n";
 
 		}
 
