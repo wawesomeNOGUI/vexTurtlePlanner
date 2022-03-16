@@ -128,18 +128,16 @@ function getFieldPoints() {
 
     for (var i = 0; i < pathScaled.length; i += 2) {
       if (pathScaled[i] == "START") {
-        pathOut.push(pathScaled[i]);
+        pathOut.push("\n\n\n");
         i++;
       }
 
-      pathOut.push( (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2)) );
-      pathOut.push( -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2)) );
+      pathOut.push( (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2)) + "\n");
+      pathOut.push( -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2)) + "\n");
     }
   }
 
   //download field points file
-  console.log(pathScaled)
-  console.log(pathOut)
   saveArrayBuffer( pathOut, 'fieldPath.txt' );
 }
 //==============================================================================
