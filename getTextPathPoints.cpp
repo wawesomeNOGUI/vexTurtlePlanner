@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <gdiplus.h>
 #include <iostream>
+#include <string>
 #include <fstream>
 
 //use gdiplus library when compiling
@@ -60,7 +61,8 @@ int main()
 	std::cout << "Input String: \n";
 
 	std::wstring s;
-	std::wcin >> s;
+	//std::wcin >> s;
+	std::getline(std::wcin, s);
 
 	//convert to WCHAR*
 	const WCHAR* result = s.c_str();
