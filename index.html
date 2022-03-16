@@ -20,9 +20,7 @@
 
 <button onclick="rotatePath()">Rotate Path</button>
 
-<!--
-<button onclick="getPoints()">Get List 'o Points</button>
--->
+<button onclick="getFieldPoints()">Get List 'o Field Points</button>
 
 Upload Points:
 <input type="file" id="inputfile">
@@ -108,6 +106,43 @@ function rotatePath() {
     }
   }
 }
+
+//======================Download Points Functions===============================
+const link = document.createElement( 'a' );
+link.style.display = 'none';
+document.body.appendChild( link );
+
+function save( blob, filename ) {
+  link.href = URL.createObjectURL( blob );
+  link.download = filename;
+  link.click();
+}
+
+function saveArrayBuffer( buffer, filename ) {
+  save( new Blob( [ buffer ], { type: 'application/octet-stream' } ), filename );
+}
+
+function getFieldPoints() {
+  if (pathScaled != undefined) {
+    var pathOut = [];
+
+    for (var i = 0; i < pathScaled.length; i += 2) {
+      if (pathScaled[i] == "START") {
+        pathOut.push(pathScaled[i]);
+        i++;
+      }
+
+      pathOut.push( Number(pathScaled[i]) * (70.25/(canvas.width/2)) );
+      pathOut.push( Number(-1 * pathScaled[i + 1]) * (70.25/(canvas.height/2)) );
+    }
+  }
+
+  //download field points file
+  console.log(pathScaled)
+  console.log(pathOut)
+  saveArrayBuffer( pathOut, 'fieldPath.txt' );
+}
+//==============================================================================
 
 function render(){
   //draw background
