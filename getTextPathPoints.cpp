@@ -19,7 +19,7 @@ void stringToPath(const WCHAR* s)
 		&fontFamily,
 		Gdiplus::FontStyleRegular,
 		48,
-		Gdiplus::Point(0, 0),
+		Gdiplus::Point(50, 50),  //to offset for font size of 48
 		NULL);
 
 	//converts each curve in the path to a sequence of connected lines.
@@ -39,7 +39,7 @@ void stringToPath(const WCHAR* s)
 		}
 
 		//std::cout << "(" << pathData.Points[j].X << ", " << -pathData.Points[j].Y << ")\n";
-		outputFile << pathData.Points[j].X << "\n" << -pathData.Points[j].Y << "\n";
+		outputFile << pathData.Points[j].X << "\n" << pathData.Points[j].Y << "\n";
 	}
 }
 

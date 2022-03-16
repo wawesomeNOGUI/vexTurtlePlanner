@@ -18,6 +18,8 @@
   Y = 0
 </p>
 
+<button onclick="rotatePath()">Rotate Path</button>
+
 <!--
 <button onclick="getPoints()">Get List 'o Points</button>
 -->
@@ -39,15 +41,21 @@ var logo = new Image;
 
 //stores array of points and figure START markers
 var path;
+var pathScaled = [];
 
 function parsePath(s) {
   s = s.replaceAll("\r", "");  //carriage return
   s = s.replaceAll("\s", "");  //whitespace
 
   path = s.split("\n");
-  console.log(path);
+  //console.log(path);
+
+  for (var i = 0; i < path.length; i++) {
+    pathScaled.push(path[i]);
+  }
 
   render();
+  render();  //IDK why have to call a couple times for stuff to show up
 }
 
 //===========Read A User Points Path File================
@@ -56,13 +64,35 @@ document.getElementById('inputfile')
 
    var fr = new FileReader();
    fr.onload = function() {
-     console.log(fr.result);
-
+     //console.log(fr.result);
      parsePath(fr.result);
    }
 
    fr.readAsText(this.files[0]);
 });
+
+function rotatePath() {
+  if(path != undefined) {
+    for (var i = 0; i < path.length; i += 2) {
+      if (path[i] == "START") {
+        i++;
+      }
+
+      var x = Number(path[i]);
+      var y = Number(path[i + 1]);
+      path[i] = -y;
+      path[i + 1] = x;
+
+      var centerX = (canvas.width - canvas.width * scale) / 2;
+      var centerY = (canvas.height - canvas.height * scale) / 2;
+
+      pathScaled[i] = path[i] * scale - centerX;
+      pathScaled[i + 1] = path[i + 1] * scale - centerY;
+    }
+    render();
+    render();
+  }
+}
 
 function render(){
   //draw background
@@ -81,14 +111,23 @@ function render(){
     ctx.drawImage(logo, centerX, centerY, canvas.width * scale, canvas.height * scale);
   } else {
     //draw path
-    for (var i = 0; i < path.length; i += 4) {
-      if (path[i] != "START") {
-        ctx.moveTo(path[i], path[i + 1]);
-        ctx.lineTo(path[i + 2], path[i + 3]);
+    var stepSize = 2;
+    for (var i = 0; i < pathScaled.length; i += stepSize) {
+      if (pathScaled[i] != "START") {
+        stepSize = 2;
+        ctx.lineTo(Number(pathScaled[i]), Number(pathScaled[i + 1]));
       } else {
+        stepSize = 3;
+        //finish old figure
+        ctx.closePath();
+        ctx.stroke();
+
         //START new figure
-        ctx.stroke();  //finish old figure
-        i++;
+        ctx.beginPath();
+        ctx.moveTo(Number(pathScaled[i + 1]), Number(pathScaled[i + 2]));
+
+        ctx.fillRect(Number(pathScaled[i + 1]), Number(pathScaled[i + 2]), 2, 2);
+        //console.log("sttart")
       }
     }
   }
@@ -164,11 +203,24 @@ canvas.addEventListener('mouseup', function(e) {
 canvas.addEventListener("mousewheel", function(e) {
   scale += -e.deltaY / 1000;
 
-  for (var i = 0; i < path.length; i++)
+  if (path != undefined) {
+    var centerX = (canvas.width - canvas.width * scale) / 2;
+    var centerY = (canvas.height - canvas.height * scale) / 2;
+
+    for (var i = 0; i < path.length; i += 2) {
+      if (path[i] == "START")
+        i++;
+
+      pathScaled[i] = path[i] * scale - centerX;
+      pathScaled[i+1] = path[i+1] * scale - centerY;
+    }
+  }
+
   // console.log(scale)
   //logo.style.backgroundColor = scale;
   //logo.setAttribute("transform", "scale(" + scale + ")");
 
+  render();
   render();
 });
 
