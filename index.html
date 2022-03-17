@@ -124,16 +124,16 @@ function saveArrayBuffer( buffer, filename ) {
 
 function getFieldPoints() {
   if (pathScaled != undefined) {
-    var pathOut = [];
+    var pathOut = "";
 
     for (var i = 0; i < pathScaled.length; i += 2) {
       if (pathScaled[i] == "START") {
-        pathOut.push("\n\n\n");
+        pathOut += "\n\n\n";
         i++;
       }
 
-      pathOut.push( (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2)) + "\n");
-      pathOut.push( -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2)) + "\n");
+      pathOut += (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2)) + ",\n";
+      pathOut += -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2)) + ",\n";
     }
   }
 
