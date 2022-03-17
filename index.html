@@ -126,14 +126,24 @@ function getFieldPoints() {
   if (pathScaled != undefined) {
     var pathOut = "";
 
-    for (var i = 0; i < pathScaled.length; i += 2) {
+    //counts up all points in each individual figure
+    //for use in variadic draw function
+    var figurePointCount = 0;
+    var figureString = "";
+
+    for (var i = 0; i < pathScaled.length - 2; i += 2) {
       if (pathScaled[i] == "START") {
-        pathOut += "\n\n\n";
+        figureString = figureString.slice(0, figureString.length - 2);  //delete last \n and ,
+        figureString = "DrivePoints(" + figurePointCount + ",\n" + figureString + ")\n\n\n";
+        pathOut += figureString;
+        figureString = "";
+        figurePointCount = 0;
         i++;
       }
 
-      pathOut += (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2)) + ",\n";
-      pathOut += -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2)) + ",\n";
+      figureString += Math.round( (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2)) ) + ",\n";
+      figureString += Math.round( -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2)) ) + ",\n";
+      figurePointCount += 2;
     }
   }
 
