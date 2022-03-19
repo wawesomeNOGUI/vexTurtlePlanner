@@ -134,7 +134,7 @@ function getFieldPoints() {
     for (var i = 0; i < pathScaled.length - 2; i += 2) {
       if (pathScaled[i] == "START") {
         figureString = figureString.slice(0, figureString.length - 2);  //delete last \n and ,
-        figureString = "DrivePoints(" + figurePointCount + ",\n" + figureString + ")\n\n\n";
+        figureString = "DrivePoints(" + figurePointCount + ",\n" + figureString + ");\n\n\n";
         pathOut += figureString;
         figureString = "";
         figurePointCount = 0;
