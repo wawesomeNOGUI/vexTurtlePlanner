@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Robot Turtle</title>
+  </head>
+<body style="overflow: hidden; margin: 0; padding: 0;">
+<canvas id="canvas" width="500" height="500" style="
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  "></canvas>
+Add points by left clicking.
+Remove points by right clicking on point.
+Move points by left clicking and dragging point around.
+Connect points by line by holding shift and then clicking two points.
+Remove that line segment by holding shift and clicking on those points again.
+<button onclick="getFieldPoints()">Get List 'o Field Points</button>
+
+<script type="text/javascript">
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+//stores object of points
+//e.g {x: y}
+var points = {};
+
+//stores object of segments and it's associated points in order of user click
+//e.g {segment: [x, y, x, y]}
+var lineSegments = {};
+
+//to give each segment a unique id
+var segmentNum = 0;
+
+//======================Download Points Functions===============================
+const link = document.createElement( 'a' );
+link.style.display = 'none';
+document.body.appendChild( link );
+
+function save( blob, filename ) {
+  link.href = URL.createObjectURL( blob );
+  link.download = filename;
+  link.click();
+}
+
+function saveArrayBuffer( buffer, filename ) {
+  save( new Blob( [ buffer ], { type: 'application/octet-stream' } ), filename );
+}
+
+function getFieldPoints() {
+  if (pathScaled != undefined) {
+    var pathOut = "";
+
+    //counts up all points in each individual figure
+    //for use in variadic draw function
+    var figurePointCount = 0;
+    var figureString = "";
+
+    for (var i = 0; i < pathScaled.length - 2; i += 2) {
+      if (pathScaled[i] == "START") {
+        figureString = figureString.slice(0, figureString.length - 2);  //delete last \n and ,
+        figureString = "DrivePoints(" + figurePointCount + ",\n" + figureString + ");\n\n\n";
+        pathOut += figureString;
+        figureString = "";
+        figurePointCount = 0;
+        i++;
+      }
+
+      figureString += Math.round( (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2)) ) + ",\n";
+      figureString += Math.round( -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2)) ) + ",\n";
+      figurePointCount += 2;
+    }
+  }
+
+  //download field points file
+  saveArrayBuffer( pathOut, 'fieldPath.txt' );
+}
+//==============================================================================
+
+function render(){
+  //draw background
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  //draw axis
+  ctx.fillStyle = "red";
+  ctx.fillRect(canvas.width/2 - 1, 0, 3, canvas.height);
+  ctx.fillRect(0, canvas.height/2 - 1,  canvas.width, 3);
+
+  //draw points
+  for (var property in points) {
+    ctx.fillStyle = "black";
+    ctx.beginPath();
+    ctx.arc(Number(property) + canvas.width/2, Number(points[property]) + canvas.height/2, 5, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+
+var movingPoint = false;
+canvas.addEventListener('mousedown', function(e) {
+  var rect = canvas.getBoundingClientRect();
+  //gets points based on middle of canvas being (0,0)
+  var mX = e.x - rect.left - canvas.width/2;
+  var mY = e.y - rect.top - canvas.height/2;
+
+  //check for point
+  for (var property in points) {
+    if (Math.abs(Number(property) - mX) < 5)
+      if (Math.abs(Number(points[property]) - mY) < 5) {
+        //clicked on point that's already there
+        movingPoint = true;
+        break;
+      }
+  }
+
+  if (!movingPoint)
+    points[mX] = mY;
+});
+
+window.addEventListener('mousemove', function(e) {
+    var rect = canvas.getBoundingClientRect();
+    var mX = e.x - rect.left - canvas.width/2;
+    var mY = e.y - rect.top - canvas.height/2;
+});
+
+canvas.addEventListener('mouseup', function(e) {
+  movingPoint = false;
+});
+
+canvas.addEventListener("mousewheel", function(e) {
+});
+
+canvas.addEventListener('contextmenu', function(e) {
+   event.preventDefault();  //stop right click menu showin up
+   //var mX = e.x - rect.left - canvas.width/2;
+   //var mY = e.y - rect.top - canvas.height/2;
+});
+
+</script>
+</body>
+</html>
