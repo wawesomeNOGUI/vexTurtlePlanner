@@ -103,6 +103,8 @@ main() {
   char logoArg[MAXDIGITS];
   char logoRepeatArg[MAXREPEAT];
 
+  int inRepeat = 0;
+
   while (*look != EOF) {
     if (*look == 'f') {
       if (*++look == 'd') {
@@ -170,13 +172,18 @@ main() {
                 while (*++look >= '0' && *look <= '9')
                   logoRepeatArg[i++] = *look;
 
-                printf("for (int i = 0; i < ");
+                //to change which character is used for the variable in nested for loops
+                char varInForLoop = 'i';
+                varInForLoop += inRepeat;
+                inRepeat ++;
+
+                printf("for (int %c = 0; %c < ", varInForLoop, varInForLoop);
                 for (int j = 0; j < MAXREPEAT; j++) {
                   if (logoRepeatArg[j] == '\0')
                     break;
                   printf("%c", logoRepeatArg[j]);
                 }
-                printf("; i++) ");
+                printf("; %c++) ", varInForLoop);
               }
         }
     } else if (*look == 'l') {
@@ -209,6 +216,7 @@ main() {
       }
     } else if (*look == ']') {
       printf("} \n");
+      inRepeat --;
       ++look;
     } else if (*look == '[') {
       printf("{ \n");
