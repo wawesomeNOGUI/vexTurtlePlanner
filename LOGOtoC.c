@@ -103,7 +103,7 @@ main() {
   char logoArg[MAXDIGITS];
   char logoRepeatArg[MAXREPEAT];
 
-  while (1) {
+  while (*look != EOF) {
     if (*look == 'f') {
       if (*++look == 'd') {
         //forward
