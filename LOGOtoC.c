@@ -106,6 +106,10 @@ main() {
   int inRepeat = 0;
 
   while (*look != EOF) {
+    //first print two spaces based on for loops
+    for (int i = 0; i < inRepeat; i++)
+      printf("  ");
+
     if (*look == 'f') {
       if (*++look == 'd') {
         //forward
@@ -215,10 +219,13 @@ main() {
         ++look;
       }
     } else if (*look == ']') {
+      printf("\b\b");
       printf("} \n");
       inRepeat --;
       ++look;
     } else if (*look == '[') {
+      for (int i = 0; i < inRepeat; i++)
+        printf("\b\b");
       printf("{ \n");
       ++look;
     }
