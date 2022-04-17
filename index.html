@@ -21,6 +21,7 @@
 <button onclick="rotatePath()">Rotate Path</button>
 
 <button onclick="getFieldPoints()">Get List 'o Field Points</button>
+<button onclick="getFieldPointsDesmos()">Get List 'o Field Points For Desmos</button>
 
 Upload Points:
 <input type="file" id="inputfile">
@@ -144,6 +145,26 @@ function getFieldPoints() {
       figureString += Math.round( (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2)) ) + ",\n";
       figureString += Math.round( -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2)) ) + ",\n";
       figurePointCount += 2;
+    }
+  }
+
+  //download field points file
+  saveArrayBuffer( pathOut, 'fieldPath.txt' );
+}
+
+function getFieldPointsDesmos() {
+  if (pathScaled != undefined) {
+    var pathOut = "";
+
+    for (var i = 0; i < pathScaled.length - 2; i += 2) {
+      if (pathScaled[i] == "START") {
+        i++;
+      }
+
+      var x = Math.round( (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2)) );
+      var y = Math.round( -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2)) );
+
+      pathOut += "(" + x + "," + y + ")\n";
     }
   }
 
