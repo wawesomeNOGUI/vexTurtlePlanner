@@ -126,25 +126,48 @@ function saveArrayBuffer( buffer, filename ) {
 function getFieldPoints() {
   if (pathScaled != undefined) {
     var pathOut = "";
+    var startX = undefined;
+    var startY = undefined;
 
     //counts up all points in each individual figure
-    //for use in variadic draw function
+    //for use in variadic draw function DrawPoints() in c++
     var figurePointCount = 0;
     var figureString = "";
 
     for (var i = 0; i < pathScaled.length - 2; i += 2) {
       if (pathScaled[i] == "START") {
+        i++;
+
+        if (i > 1) {
+          console.log(startX)
+          figureString += startX + ",\n";
+          figureString += startY + ",\n";
+
+          figurePointCount += 2;
+          startX = undefined;
+          startY = undefined;
+        }
+
         figureString = figureString.slice(0, figureString.length - 2);  //delete last \n and ,
         figureString = "DrivePoints(" + figurePointCount + ",\n" + figureString + ");\n\n\n";
         pathOut += figureString;
         figureString = "";
         figurePointCount = 0;
-        i++;
       }
 
-      figureString += Math.round( (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2)) ) + ",\n";
-      figureString += Math.round( -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2)) ) + ",\n";
-      figurePointCount += 2;
+      var x = (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2));
+      var y = -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2));
+
+      if (startX == undefined) {
+        startX = x;
+        startY = y;
+      }
+
+      if (!(startX == x && startY == y)) {
+        figureString += x + ",\n";
+        figureString += y + ",\n";
+        figurePointCount += 2;
+      }
     }
   }
 
@@ -155,16 +178,30 @@ function getFieldPoints() {
 function getFieldPointsDesmos() {
   if (pathScaled != undefined) {
     var pathOut = "";
+    var startX = undefined;
+    var startY = undefined;
 
     for (var i = 0; i < pathScaled.length - 2; i += 2) {
       if (pathScaled[i] == "START") {
         i++;
+
+        if (i > 1) {
+          pathOut += "(" + startX + "," + startY + ")\n"
+          startX = undefined;
+          startY = undefined;
+        }
       }
 
-      var x = Math.round( (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2)) );
-      var y = Math.round( -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2)) );
+      var x = (Number(pathScaled[i]) - canvas.width/2) * (70.25/(canvas.width/2));
+      var y = -1 * (Number(pathScaled[i + 1]) - canvas.height/2) * (70.25/(canvas.height/2));
 
-      pathOut += "(" + x + "," + y + ")\n";
+      if (startX == undefined) {
+        startX = x;
+        startY = y;
+      }
+
+      if (!(startX == x && startY == y))
+        pathOut += "(" + x + "," + y + ")\n";
     }
   }
 
