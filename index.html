@@ -139,7 +139,6 @@ function getFieldPoints() {
         i++;
 
         if (i > 1) {
-          console.log(startX)
           figureString += startX + ",\n";
           figureString += startY + ",\n";
 
@@ -161,6 +160,10 @@ function getFieldPoints() {
       if (startX == undefined) {
         startX = x;
         startY = y;
+        figureString += x + ",\n";
+        figureString += y + ",\n";
+        figurePointCount += 2;
+        continue;
       }
 
       if (!(startX == x && startY == y)) {
@@ -186,7 +189,7 @@ function getFieldPointsDesmos() {
         i++;
 
         if (i > 1) {
-          pathOut += "(" + startX + "," + startY + ")\n"
+          pathOut += "(" + startX + "," + startY + ")\n";
           startX = undefined;
           startY = undefined;
         }
@@ -198,6 +201,8 @@ function getFieldPointsDesmos() {
       if (startX == undefined) {
         startX = x;
         startY = y;
+        pathOut += "(" + x + "," + y + ")\n";
+        continue;
       }
 
       if (!(startX == x && startY == y))
@@ -206,7 +211,7 @@ function getFieldPointsDesmos() {
   }
 
   //download field points file
-  saveArrayBuffer( pathOut, 'fieldPath.txt' );
+  saveArrayBuffer( pathOut, 'fieldPathDesmos.txt' );
 }
 //==============================================================================
 
